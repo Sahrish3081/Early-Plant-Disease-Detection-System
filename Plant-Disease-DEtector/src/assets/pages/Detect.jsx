@@ -1,26 +1,46 @@
+import { useState } from "react";
+import { useApp } from "../../context/AppContext";
+import { detectDisease } from "../../services/api";
+import ImageUploader   from "../components/ImageUploader";
+import LoadingSpinner  from "../components/LoadingSpinner";
+import AnnotatedImage  from "../components/AnnotatedImage";
+import ResultCard      from "../components/ResultCard";
+import DiseaseInfo     from "../components/DiseaseInfo";
+
 const Detect = () => {
   const { addToHistory } = useApp();
-  const [imageFile, setImageFile] = useState(null);
+
+  const [imageFile,    setImageFile]    = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
+  const [loading,      setLoading]      = useState(false);
+  const [result,       setResult]       = useState(null);
+  const [error,        setError]        = useState(null);
 
   const handleImageSelected = (file, preview) => {
     setImageFile(file);
     setImagePreview(preview);
     setResult(null);
+    setError(null);
   };
 
   const handleAnalyze = async () => {
     if (!imageFile) return;
     setLoading(true);
+    setError(null);
     setResult(null);
+
     try {
-      const data = await mockDetect();
+      const data = await detectDisease(imageFile);
       setResult(data);
-      addToHistory({ id: Date.now(), image: imagePreview, disease: data.disease, date: new Date().toLocaleDateString() });
-    } catch (e) {
-      alert("Analysis failed. Please try again.");
+      addToHistory({
+        id:      Date.now(),
+        image:   imagePreview,
+        disease: data.disease,
+        date:    new Date().toLocaleDateString("en-PK"),
+      });
+    } catch (err) {
+      setError("Analysis failed. Please try again.");
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -28,12 +48,16 @@ const Detect = () => {
 
   return (
     <div className="page detect-page">
-      <div className="page-header">
-        <h2 className="page-title">Disease Detection</h2>
-        <p className="page-sub">Upload a plant image to get an instant AI-powered diagnosis</p>
+      <div className="page-header" style={{ justifyContent: "center" }}>
+        <div style={{ textAlign: "center", width: "100%" }}>
+          <h2 className="page-title">Disease Detection</h2>
+          <p className="page-sub">Upload a plant image to get an instant AI-powered diagnosis</p>
+        </div>
       </div>
 
-      <div className="detect-layout">
+      {error && <div className="error-banner">⚠️ {error}</div>}
+
+      <div className="detect-layout" style={{ justifyContent: "center", maxWidth: "1000px", margin: "0 auto" }}>
         <div className="detect-left">
           <ImageUploader
             onImageSelected={handleImageSelected}
@@ -50,12 +74,13 @@ const Detect = () => {
 
         {result && !loading && (
           <div className="detect-right">
-            <ResultCard disease={result.disease} />
-            <DiseaseInfo info={result.info} />
+            <ResultCard  disease={result.disease} />
+            <DiseaseInfo info={result.info}       />
           </div>
         )}
       </div>
     </div>
   );
 };
-export default Detect
+
+export default Detect;

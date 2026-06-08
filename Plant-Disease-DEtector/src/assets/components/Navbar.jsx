@@ -1,7 +1,8 @@
-import { useState, useEffect,  createContext, useContext } from "react";
+import { useState, useEffect } from "react";
+
 const Navbar = ({ page, setPage }) => {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled]   = useState(false);
+  const [menuOpen, setMenuOpen]   = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -17,6 +18,7 @@ const Navbar = ({ page, setPage }) => {
         <span className="nav-logo">🌿</span>
         <span className="nav-title">PhytoScan</span>
       </div>
+
       <div className={`nav-links ${menuOpen ? "open" : ""}`}>
         {links.map((l) => (
           <button
@@ -28,10 +30,12 @@ const Navbar = ({ page, setPage }) => {
           </button>
         ))}
       </div>
+
       <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
         <span /><span /><span />
       </button>
     </nav>
   );
 };
-export default Navbar
+
+export default Navbar;

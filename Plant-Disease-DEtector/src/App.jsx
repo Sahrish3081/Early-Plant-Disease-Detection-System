@@ -1,40 +1,36 @@
+import { useState } from "react";
+import { AppProvider } from "./context/AppContext";
 
-import { useState, useRef, useEffect, useCallback, createContext, useContext } from "react";
+// Components
+import Navbar  from "./assets/components/Navbar";
+import Footer  from "./assets/components/Footer";
 
-import './App.css'
+// Pages
+import Home    from "./assets/pages/Home";
+import Detect  from "./assets/pages/Detect";
+import History from "./assets/pages/History";
+import About   from "./assets/pages/About";
+
+// Global styles
+import "./styles/global.css";
 
 export default function App() {
   const [page, setPage] = useState("Home");
-  const [history, setHistory] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("phytoscan_history") || "[]"); } catch { return []; }
-  });
-
-  const addToHistory = (item) => {
-    setHistory((prev) => {
-      const next = [item, ...prev].slice(0, 20);
-      localStorage.setItem("phytoscan_history", JSON.stringify(next));
-      return next;
-    });
-  };
-
-  const clearHistory = () => {
-    setHistory([]);
-    localStorage.removeItem("phytoscan_history");
-  };
 
   return (
-    <AppContext.Provider value={{ history, addToHistory, clearHistory }}>
-      <style>{css}</style>
+    <AppProvider>
       <div className="app">
         <Navbar page={page} setPage={setPage} />
+
         <main className="main-content">
-          {page === "Home" && <Home setPage={setPage} />}
-          {page === "Detect" && <Detect />}
+          {page === "Home"    && <Home    setPage={setPage} />}
+          {page === "Detect"  && <Detect  />}
           {page === "History" && <History />}
-          {page === "About" && <About />}
+          {page === "About"   && <About   />}
         </main>
+
         <Footer />
       </div>
-    </AppContext.Provider>
+    </AppProvider>
   );
 }
