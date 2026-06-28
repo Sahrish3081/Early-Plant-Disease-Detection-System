@@ -149,9 +149,10 @@ VITE_API_URL=http://localhost:5000/api/v1
 
 ## 👩‍💻 Developer
 
-**[Your Name]**  
+**[SAHRISH]**  
 Final Year Project — BS Computer Science  
-[Your University Name] — 2025
+[UNIVERSITY OF OKARA ] — 2026
+
 
 ---
 
