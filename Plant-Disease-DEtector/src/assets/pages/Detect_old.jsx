@@ -35,7 +35,7 @@ const Detect = () => {
       addToHistory({
         id: Date.now(),
         image: imagePreview,
-        disease: data.diseaseName, // FIX: was data.disease (an object) -> showed [object Object]
+        disease: data.disease,
         date: new Date().toLocaleDateString("en-PK"),
       });
     } catch (err) {
@@ -53,12 +53,7 @@ const Detect = () => {
       <div className="page-header" style={{ justifyContent: "center" }}>
         <div style={{ textAlign: "center", width: "100%" }}>
           <h2 className="page-title">Disease Detection</h2>
-          <p className="page-sub">Upload a plant image to get an instant diagnosis</p>
-          {/* NEW: input guidance — steers users toward what the model is good at */}
-          <p className="page-sub" style={{ fontSize: "0.85rem", opacity: 0.8 }}>
-            📷 Best results: a single close-up leaf on a plain background, good lighting.
-            Whole-field or cluttered photos may be unreliable.
-          </p>
+          <p className="page-sub">Upload a plant image to get an instant  diagnosis</p>
         </div>
       </div>
 
@@ -80,10 +75,10 @@ const Detect = () => {
 
           {result && !loading && (
             <AnnotatedImage
-              /*
-                annotatedImage → Flask model ki base64 image (heatmap)  [currently not forwarded]
-                imagePreview   → original image + canvas boxes (current view)
-                annotations    → canvas drawing ke liye
+              /* 
+                annotatedImage → Flask model ki base64 image (blue spots already drawn)
+                imagePreview   → original image fallback (mock mode)
+                annotations    → canvas drawing ke liye (mock mode)
               */
               imagePreview={result.annotatedImage || imagePreview}
               annotations={result.annotatedImage ? [] : result.annotations}
@@ -94,20 +89,6 @@ const Detect = () => {
         {/* Right — Results */}
         {result && !loading && (
           <div className="detect-right">
-
-            {/* NEW: Uncertainty warning banner */}
-            {result.uncertain && (
-              <div
-                className="error-banner"
-                style={{
-                  background: "#fdf6e3",
-                  color: "#8a6d3b",
-                  border: "1px solid #e0c97f",
-                }}
-              >
-                ⚠️ {result.uncertaintyMessage}
-              </div>
-            )}
 
             {/* Crop + Disease Name Card */}
             <div className="crop-info-card">
@@ -120,21 +101,6 @@ const Detect = () => {
                 <span className="crop-value">{result.disease?.name}</span>
               </div>
             </div>
-
-            {/* NEW: Top-3 predictions for transparency */}
-            {result.topPredictions?.length > 0 && (
-              <div className="crop-info-card">
-                <div className="crop-label" style={{ marginBottom: 6 }}>
-                  Top predictions
-                </div>
-                {result.topPredictions.filter((p, i) => i === 0 || p.prob >= 1).map((p, i) => (
-                  <div key={i} className="crop-info-row">
-                    <span className={i === 0 ? "crop-value" : "crop-label"}>{p.label}</span>
-                    <span className="crop-value">{p.prob}%</span>
-                  </div>
-                ))}
-              </div>
-            )}
 
             <ResultCard disease={result.disease} />
             <DiseaseInfo info={result.info} />

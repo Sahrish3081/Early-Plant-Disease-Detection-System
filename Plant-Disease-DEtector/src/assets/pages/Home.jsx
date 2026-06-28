@@ -20,7 +20,7 @@ const Home = ({ setPage }) => (
       <div className="hero-content">
         <div className="hero-badge">🌱 AI-Powered Plant Pathology</div>
         <h1 className="hero-title">
-          Detect Plant Disease<br />
+          Multi Crop Disease Detection<br />
           <span className="hero-accent">Before It Spreads</span>
         </h1>
         <p className="hero-sub">

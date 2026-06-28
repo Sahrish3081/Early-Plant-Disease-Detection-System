@@ -1,0 +1,45 @@
+# Node.js
+node_modules/
+npm-debug.log
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+env/
+.env
+*.egg-info/
+
+# ML Models (too large for GitHub)
+*.h5
+*.keras
+*.pt
+*.pth
+
+# uploads folder (user images)
+backend/uploads/*
+ml-model/uploads/*
+
+# Keep uploads folder but not its contents
+!backend/uploads/.gitkeep
+!ml-model/uploads/.gitkeep
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Vite build
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# class_names (optional - can include)
+# *.npy
+# ML virtual environment
+ml-model/venv311/
+backend/venv/
